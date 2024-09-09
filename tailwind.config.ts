@@ -9,11 +9,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        primary: '#17A2B8',
         background: 'var(--background)',
         foreground: 'var(--foreground)',
       },
     },
   },
-  plugins: [],
+  darkMode: 'class',
+  plugins: [require('tailgrids/plugin')],
 };
 export default config;
