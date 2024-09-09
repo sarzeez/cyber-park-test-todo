@@ -7,17 +7,17 @@ import * as Yup from 'yup';
 import TextField from '@/components/form/TextField';
 
 type FormValues = {
-  email: string;
+  username: string;
   password: string;
 };
 
 const initialValues: FormValues = {
-  email: '',
+  username: '',
   password: '',
 };
 
 const validationSchema = Yup.object({
-  email: Yup.string().trim().email('Email must be valid').required('Email is required'),
+  username: Yup.string().trim().required('Username is required'),
   password: Yup.string()
     .trim()
     .min(6, 'Password must be at least 6 characters')
@@ -27,11 +27,13 @@ const validationSchema = Yup.object({
 
 const LoginPage = () => {
   const searchParams = useSearchParams();
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const submitHandler = async (values: FormValues) => {
+    setLoading(true);
     try {
       const response = await signIn('credentials', {
-        username: values.email,
+        username: values.username,
         password: values.password,
         redirect: false,
       });
@@ -45,6 +47,7 @@ const LoginPage = () => {
     } catch (error) {
       setError('Server is not available, please try again!');
     }
+    setLoading(false);
   };
 
   const formik = useFormik({ initialValues, validationSchema, onSubmit: submitHandler });
@@ -63,8 +66,14 @@ const LoginPage = () => {
                   onSubmit={formik.handleSubmit}
                   className="flex flex-col gap-4"
                 >
-                  <TextField name="email" label="Email" formik={formik} placeholder="Email" />
                   <TextField
+                    name="username"
+                    label="Username"
+                    formik={formik}
+                    placeholder="Username"
+                  />
+                  <TextField
+                    type="password"
                     name="password"
                     label="Password"
                     formik={formik}
@@ -76,7 +85,7 @@ const LoginPage = () => {
                       type="submit"
                       className="w-full cursor-pointer rounded-md border border-primary bg-primary px-[14px] py-3 text-white transition hover:bg-opacity-90"
                     >
-                      Submit
+                      {loading ? 'Loading...' : 'Submit'}
                     </button>
                   </div>
                 </form>
