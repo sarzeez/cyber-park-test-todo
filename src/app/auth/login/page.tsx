@@ -1,8 +1,9 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import TextField from '@/components/ui/TextField';
+import TextField from '@/components/form/TextField';
+import { signIn } from 'next-auth/react';
 
 type FormValues = {
   email: string;
@@ -24,8 +25,23 @@ const validationSchema = Yup.object({
 });
 
 const LoginPage = () => {
-  const submitHandler = (values: FormValues) => {
-    console.log({ values });
+  const [error, setError] = useState<string | null>(null);
+  const submitHandler = async (values: FormValues) => {
+    try {
+      const response = await signIn('credentials', {
+        username: values.email,
+        password: values.password,
+        redirect: true,
+        callbackUrl: '/',
+      });
+
+      if (!response?.ok) {
+        setError('Invalid credentials.');
+        return;
+      }
+    } catch (error) {
+      setError('Server is not available, please try again!');
+    }
   };
 
   const formik = useFormik({ initialValues, validationSchema, onSubmit: submitHandler });
@@ -51,6 +67,7 @@ const LoginPage = () => {
                     formik={formik}
                     placeholder="Password"
                   />
+                  {error ? <p className="text-red text-sm">{error}</p> : null}
                   <div className="mb-8">
                     <button
                       type="submit"
