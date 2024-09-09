@@ -1,9 +1,14 @@
 import Container from '@/components/ui/Container';
+import { getServerAuthSession } from '@/config/auth';
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerAuthSession();
   return (
     <Container>
-      <section>Home Page</section>
+      <section>
+        <h1>Home Page</h1>
+        <div>{JSON.stringify(session)}</div>
+      </section>
     </Container>
   );
 }

@@ -1,9 +1,10 @@
 'use client';
 import React, { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import TextField from '@/components/form/TextField';
-import { signIn } from 'next-auth/react';
 
 type FormValues = {
   email: string;
@@ -25,20 +26,22 @@ const validationSchema = Yup.object({
 });
 
 const LoginPage = () => {
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
   const submitHandler = async (values: FormValues) => {
     try {
       const response = await signIn('credentials', {
         username: values.email,
         password: values.password,
-        redirect: true,
-        callbackUrl: '/',
+        redirect: false,
       });
-
-      if (!response?.ok) {
-        setError('Invalid credentials.');
+      if (response?.ok) {
+        const callbackUrl = searchParams.get('callbackUrl') ?? '/';
+        window.location.href = callbackUrl;
         return;
       }
+
+      setError('Invalid credentials.');
     } catch (error) {
       setError('Server is not available, please try again!');
     }
