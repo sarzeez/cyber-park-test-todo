@@ -1,3 +1,4 @@
+import { userService } from '@/services/user.service';
 import { getServerSession, type NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
@@ -29,11 +30,9 @@ export const authOptions: NextAuthOptions = {
           username: string;
           password: string;
         };
-        if (username === 'admin@gmail.com') {
-          return { id: '12312', name: 'sarzeez', email: 'sarzeez@gmail.com' };
-        }
+        const user = await userService.authenticate(username, password);
 
-        return null;
+        return user;
       },
     }),
   ],
