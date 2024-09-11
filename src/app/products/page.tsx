@@ -1,18 +1,29 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
+import Link from 'next/link';
+import Pagination from 'rc-pagination';
 import Container from '@/components/ui/Container';
 import { useGetProductListQuery } from '@/features/products/store/reducer';
 import { Product } from '@/features/products/type';
-import Link from 'next/link';
+import '@/assets/styles/pagination.css';
 
 type Header = {
   name: string;
   styles: string;
 };
 
+const LIMIT = 10;
+
 const Products = () => {
-  const { data, isFetching } = useGetProductListQuery({ limit: 10, skip: 0 });
-  console.log({ data });
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data, isFetching } = useGetProductListQuery({
+    limit: LIMIT,
+    skip: (currentPage - 1) * LIMIT,
+  });
+
+  const onChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <Container>
@@ -21,12 +32,22 @@ const Products = () => {
           Providers
         </h1>
         {isFetching ? <p>Loading...</p> : null}
-        <div className="my-10 max-w-full overflow-x-auto rounded-xl bg-white shadow-[0px_3px_8px_0px_rgba(0,0,0,0.08)] dark:bg-dark-2">
+        <div className="mt-10 max-w-full overflow-x-auto rounded-xl bg-white shadow-[0px_3px_8px_0px_rgba(0,0,0,0.08)] dark:bg-dark-2">
           <table className="w-full table-auto">
             <TableHead headers={headers} />
             <TableBody data={data?.products || []} />
           </table>
         </div>
+        {data && data?.total > 0 ? (
+          <div className="my-10 ml-auto w-max">
+            <Pagination
+              onChange={onChange}
+              pageSize={LIMIT}
+              current={currentPage}
+              total={data.total}
+            />
+          </div>
+        ) : null}
       </section>
     </Container>
   );
@@ -35,7 +56,8 @@ const Products = () => {
 export default Products;
 
 const headers: Header[] = [
-  { name: 'Brand', styles: 'min-w-[280px]' },
+  { name: 'ID', styles: '' },
+  { name: 'Title', styles: 'min-w-[280px]' },
   { name: 'Category', styles: 'min-w-[280px]' },
   { name: 'Price', styles: 'min-w-[250px]' },
   { name: 'Rating', styles: 'min-w-[140px]' },
@@ -63,13 +85,17 @@ const TableBody = ({ data }: { data: Product[] }) => {
     <tbody>
       {data.map((row, index) => (
         <tr key={index}>
-          <td className="border-t border-stroke px-4 py-5 pl-11 dark:border-dark-3">
-            <Link
-              href={`/products/${row.id}`}
-              className="text-base text-blue-700 hover:underline dark:text-dark-6"
-            >
-              {row.brand}
-            </Link>
+          <td className="border-t border-stroke px-4 py-5 pl-11 dark:border-dark-3">{row.id}</td>
+          <td className="border-t border-stroke px-4 py-5 dark:border-dark-3">
+            <p className="text-base text-body-color dark:text-dark-6">
+              {' '}
+              <Link
+                href={`/products/${row.id}`}
+                className="text-base text-blue-700 hover:underline dark:text-dark-6"
+              >
+                {row.title}
+              </Link>
+            </p>
           </td>
           <td className="border-t border-stroke px-4 py-5 dark:border-dark-3">
             <p className="text-base text-body-color dark:text-dark-6">{row.category}</p>
