@@ -13,7 +13,7 @@ export interface ProductsResponse {
 export const productApiSlice = createApi({
   reducerPath: 'product',
   baseQuery,
-  tagTypes: ['Product'],
+  tagTypes: ['Product', 'ProductView'],
   endpoints: (builder) => ({
     getProductList: builder.query<ProductsResponse | undefined, Params>({
       query: (params: Params) => {
@@ -30,9 +30,36 @@ export const productApiSlice = createApi({
           url: `/products/${id}`,
         };
       },
-      providesTags: ['Product'],
+      providesTags: ['ProductView'],
+    }),
+    updateProduct: builder.mutation<
+      { id: number; product: Product },
+      { id: number; product: Product }
+    >({
+      query({ id, product }) {
+        return {
+          url: `/products/${id}`,
+          method: 'PUT',
+          body: product,
+        };
+      },
+      invalidatesTags: ['Product'],
+    }),
+    deleteProduct: builder.mutation({
+      query(id: number) {
+        return {
+          url: `/products/${id}`,
+          method: 'DELETE',
+        };
+      },
+      invalidatesTags: ['Product'],
     }),
   }),
 });
 
-export const { useGetProductListQuery, useGetProductQuery } = productApiSlice;
+export const {
+  useGetProductListQuery,
+  useGetProductQuery,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+} = productApiSlice;
