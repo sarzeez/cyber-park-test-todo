@@ -3,9 +3,13 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Pagination from 'rc-pagination';
 import Container from '@/components/ui/Container';
-import { useGetProductListQuery } from '@/features/products/store/reducer';
+import {
+  useDeleteProductMutation,
+  useGetProductListQuery,
+} from '@/features/products/store/reducer';
 import { Product } from '@/features/products/type';
 import '@/assets/styles/pagination.css';
+import { PencilIcon, TrashIcon } from '@/assets/icons';
 
 type Header = {
   name: string;
@@ -61,6 +65,7 @@ const headers: Header[] = [
   { name: 'Category', styles: 'min-w-[280px]' },
   { name: 'Price', styles: 'min-w-[250px]' },
   { name: 'Rating', styles: 'min-w-[140px]' },
+  { name: 'Actions', styles: 'min-w-[140px]' },
 ];
 
 const TableHead = ({ headers }: { headers: Header[] }) => {
@@ -81,6 +86,11 @@ const TableHead = ({ headers }: { headers: Header[] }) => {
 };
 
 const TableBody = ({ data }: { data: Product[] }) => {
+  const [deleteProduct, {}] = useDeleteProductMutation();
+  const deleteHandler = (id: number) => {
+    deleteProduct(id);
+  };
+
   return (
     <tbody>
       {data.map((row, index) => (
@@ -103,8 +113,26 @@ const TableBody = ({ data }: { data: Product[] }) => {
           <td className="border-t border-stroke px-4 py-5 dark:border-dark-3">
             <p className="text-base text-body-color dark:text-dark-6">$ {row.price}</p>
           </td>
-          <td className="border-t border-stroke px-4 py-5 pr-11 dark:border-dark-3">
+          <td className="border-t border-stroke px-4 py-5 dark:border-dark-3">
             <p className="text-base text-body-color dark:text-dark-6">{row.rating}</p>
+          </td>
+          <td className="border-t border-stroke px-4 pr-11 dark:border-dark-3">
+            <div className="flex items-center justify-between">
+              <Link href={`/products/${row.id}/edit`} className="group flex items-center">
+                <span className="inline-block rounded-full p-2 hover:bg-primary/10">
+                  <PencilIcon className="fill-black group-hover:fill-primary" />
+                </span>
+              </Link>
+              <button
+                onClick={() => deleteHandler(row.id)}
+                type="button"
+                className="group flex items-center justify-center"
+              >
+                <span className="inline-block rounded-full p-2 hover:bg-red/10">
+                  <TrashIcon className="fill-black group-hover:fill-red" />
+                </span>
+              </button>
+            </div>
           </td>
         </tr>
       ))}
