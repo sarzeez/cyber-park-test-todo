@@ -101,7 +101,7 @@ const TableBody = ({ data }: { data: Product[] }) => {
             <p className="text-base text-body-color dark:text-dark-6">{row.category}</p>
           </td>
           <td className="border-t border-stroke px-4 py-5 dark:border-dark-3">
-            <p className="text-base text-body-color dark:text-dark-6">{row.price}</p>
+            <p className="text-base text-body-color dark:text-dark-6">$ {row.price}</p>
           </td>
           <td className="border-t border-stroke px-4 py-5 pr-11 dark:border-dark-3">
             <p className="text-base text-body-color dark:text-dark-6">{row.rating}</p>

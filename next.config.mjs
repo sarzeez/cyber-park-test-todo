@@ -5,6 +5,14 @@ const nextConfig = {
     PASSWORD: process.env.PASSWORD,
     BACKEND_URL: process.env.BACKEND_URL,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.dummyjson.com',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
