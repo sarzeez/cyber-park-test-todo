@@ -19,10 +19,6 @@ const menus: Menu[] = [
     url: '/products',
   },
   {
-    title: 'Users',
-    url: '/users',
-  },
-  {
     title: 'Posts',
     url: '/posts',
   },

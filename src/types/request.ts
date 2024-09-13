@@ -7,4 +7,5 @@ export type Params = {
   sortBy?: string;
   order?: 'asc' | 'desc';
   category?: string;
+  tag?: string;
 };
