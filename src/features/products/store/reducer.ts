@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from '@/redux/query';
-import { Product } from '../type';
+import { Category, Product } from '../type';
 import { Params } from '@/types/request';
 
 export interface ProductsResponse {
@@ -13,10 +13,24 @@ export interface ProductsResponse {
 export const productApiSlice = createApi({
   reducerPath: 'product',
   baseQuery,
-  tagTypes: ['Product', 'ProductView'],
+  tagTypes: ['Product', 'ProductView', 'Category'],
   endpoints: (builder) => ({
     getProductList: builder.query<ProductsResponse | undefined, Params>({
-      query: (params: Params) => {
+      query: ({ category, search, ...params }: Params) => {
+        if (category) {
+          return {
+            url: `/products/category/${category}`,
+            params,
+          };
+        }
+
+        if (search) {
+          return {
+            url: `/products/search/?q=${search}`,
+            params,
+          };
+        }
+
         return {
           url: '/products',
           params,
@@ -54,6 +68,14 @@ export const productApiSlice = createApi({
       },
       invalidatesTags: ['Product'],
     }),
+    getProductCategoryList: builder.query<Array<Category> | undefined, null>({
+      query: () => {
+        return {
+          url: '/products/categories',
+        };
+      },
+      providesTags: ['Category'],
+    }),
   }),
 });
 
@@ -62,4 +84,5 @@ export const {
   useGetProductQuery,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useGetProductCategoryListQuery,
 } = productApiSlice;
