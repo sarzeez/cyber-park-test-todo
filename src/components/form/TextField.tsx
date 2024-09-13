@@ -29,7 +29,7 @@ const TextField = ({
   return (
     <div className="relative">
       {label ? (
-        <label htmlFor={name} className="text-body-color mb-2 block font-medium dark:text-white">
+        <label htmlFor={name} className="mb-2 block font-medium text-body-color dark:text-white">
           {label}
         </label>
       ) : null}
@@ -37,14 +37,14 @@ const TextField = ({
         type={type ?? 'text'}
         autoFocus={autoFocus}
         id={name}
-        className={`text-body-color dark:border-dark-3 w-full rounded-md border border-[#E9EDF4] bg-transparent px-5 py-3 outline-none focus:border-primary focus-visible:shadow-none dark:text-white ${className || ''.trim()}`}
+        className={`w-full rounded-md border border-[#E9EDF4] bg-transparent bg-white px-5 py-3 text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-dark-3 dark:text-white ${className || ''.trim()}`}
         placeholder={placeholder}
         autoComplete="off"
         {...formik.getFieldProps(name)}
         onChange={(e) => (onChange ? onChange(e) : formik.handleChange(e))}
       />
       {error ? (
-        <label className="text-red block pl-2 text-sm dark:text-white">{helperText}</label>
+        <label className="block pl-2 text-sm text-red dark:text-white">{helperText}</label>
       ) : null}
     </div>
   );

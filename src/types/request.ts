@@ -6,4 +6,5 @@ export type Params = {
   select?: string;
   sortBy?: string;
   order?: 'asc' | 'desc';
+  category?: string;
 };

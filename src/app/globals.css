@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import '../assets/styles/button.css';
+@import '../assets/styles/form.css';
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

@@ -1,0 +1,15 @@
+.text-field {
+  @apply w-full rounded-md border border-[#E9EDF4] bg-transparent bg-white px-5 py-3 text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-dark-3 dark:text-white;
+}
+
+.text-field-label {
+  @apply mb-2 block font-medium dark:text-white;
+}
+
+.error-label {
+  @apply block pl-2 text-[12px] leading-[20px] text-red dark:text-white;
+}
+
+.select-field {
+  @apply relative w-full appearance-none rounded-md border border-gray-4 px-5 py-[10px] pr-10 text-[16px] leading-[24px] text-body-color outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2 dark:border-dark-3;
+}
